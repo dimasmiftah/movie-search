@@ -35,9 +35,9 @@ function App() {
   const { movies, errorMessage, loading } = state;
   return (
     <div className="App">
-      <Header text='PNGCARIAN FILMMM'/>
+      <Header text='YOUR MOVIE'/>
       <Search searchMovie={searchMovie}/>
-      <p className="App-intro">Sharing a few of our favorite movies</p>
+      <p className="App-intro">Search movie by your name</p>
       <div className="movies">
         {loading && !errorMessage ? (
           <span>loading...</span>
