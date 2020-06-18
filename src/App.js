@@ -1,24 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useEffect, useReducer} from 'react';
 import './App.css';
+import Header from './components/Header';
+import Search from './components/Search';
+import Movie from './components/Movie';
+import { reducer, initialState } from './reducer';
+
+const MOVIE_API_URL = "http://www.omdbapi.com/?s=man&apikey=a5c89c1a"; 
 
 function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    fetch(MOVIE_API_URL)
+      .then((res) => res.json())
+      .then((resJSON)=> {
+        dispatch({type: 'SEARCH_MOVIE_SUCCESS', payload: resJSON.Search})
+      })
+  }, []);
+
+  const searchMovie = (searchValue) => {
+    dispatch({type: 'SEARCH_MOVIE_REQUEST'})
+
+    fetch(`http://www.omdbapi.com/?s=${searchValue}&apikey=a5c89c1a`)
+      .then((res) => res.json())
+      .then((resJSON) => {
+        if (resJSON.Response === 'True') {
+          dispatch({type: 'SEARCH_MOVIE_SUCCESS', payload: resJSON.Search})
+        } else {
+          dispatch({type: 'SEARCH_MOVIES_FAILURE', error: resJSON.Error})
+        }
+      });
+  }
+
+  const { movies, errorMessage, loading } = state;
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header text='PNGCARIAN FILMMM'/>
+      <Search searchMovie={searchMovie}/>
+      <p className="App-intro">Sharing a few of our favorite movies</p>
+      <div className="movies">
+        {loading && !errorMessage ? (
+          <span>loading...</span>
+        ) : errorMessage ? (
+          <div className="errorMessage">{errorMessage}</div>
+        ) : (
+          movies.map((movie, index) => (<Movie key={`${index}-${movie.Title}`} movie={movie}/>))
+        )}
+      </div>
     </div>
   );
 }
