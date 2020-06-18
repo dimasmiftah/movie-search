@@ -5,7 +5,7 @@ import Search from './components/Search';
 import Movie from './components/Movie';
 import { reducer, initialState } from './reducer';
 
-const MOVIE_API_URL = "http://www.omdbapi.com/?s=man&apikey=a5c89c1a"; 
+const MOVIE_API_URL = "https://www.omdbapi.com/?s=man&apikey=a5c89c1a"; 
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -21,7 +21,7 @@ function App() {
   const searchMovie = (searchValue) => {
     dispatch({type: 'SEARCH_MOVIE_REQUEST'})
 
-    fetch(`http://www.omdbapi.com/?s=${searchValue}&apikey=a5c89c1a`)
+    fetch(`https://www.omdbapi.com/?s=${searchValue}&apikey=a5c89c1a`)
       .then((res) => res.json())
       .then((resJSON) => {
         if (resJSON.Response === 'True') {
